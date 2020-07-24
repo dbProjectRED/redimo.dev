@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7630838/7002412/css/fonts.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <!--<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>-->
+    <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>-->
+    <title></title>
+    <style type="text/css">
+        html,body{
+            font-size: 18px;
+            font-family: "Decimal A", "Decimal B";
+        }
+        code, pre{
+            font-family: "Operator Mono SSm A", "Operator Mono SSm B";
+            color: darkred;
+        }
+        h1 {
+            font-family: "Decimal A", "Decimal B";
+            font-weight: 800;
+            color: darkred;
+        }
+    </style>
+</head>
+<body>
+<div class="container"><h1 id="redimo" class="my-5">REDIMO</h1>
+<h2 id="the-redis-apis-simplicity-over-dynamodbs-complexity" class="lead my-5">The Redis API&apos;s simplicity over DynamoDB&apos;s complexity.</h2>
+<p class="my-4">Web based services today tend to have customers all over the world, and a large number of them active at different times. To deal with the speed/slowness of light, we run our code and application servers at the edges of the internet, close to our users. And because our load graphs are almost never a straight line, we try to run serverless systems that automatically go from zero to millions of requests per second when required. </p>
+<p class="my-4">But what about data? Do we want to keep hitting a single database or datastore in one blessed region to service requests from all around the world? And doesn&apos;t that negate all the progress we&apos;ve made with distributing and automatically scaling application servers?</p>
+<p class="my-4">Out of the globally distributed datastore offerings on the market right now, one stands out: AWS DynamoDB, with Global Tables. DynamoDB has long been a foundational component of the AWS system, and helps run AWS itself, along with critical Amazon (retail) infrastructure. The Global Tables feature allows linking DynamoDB tables in regions across the world and automatically replicating their data with each other. And with the On-Demand pricing system, it&apos;s now possible to have a serverless system that scales down to zero running costs when no operations are happening, while being able to ramp up quickly to millions of requests per second. </p>
+<p class="my-4">The downside of DynamoDB is that it requires a thorough understanding of an unfamiliar and difficult API if you want to use it. The upside is that it&apos;s possible to implement a simpler Redis-inspired API over DynamoDB. Whether you&apos;re running in a single region or globally distributed, it&apos;s much easier to write and reason about code that uses <code>GET</code>, <code>SET</code> and other clear and simple NoSQL operations. These operations can be automatically translated into their arcane DynamoDB counterparts, which is what REDIMO does for you.</p>
+<p class="my-4">REDIMO runs servers around the world that wrap DynamoDB and offer an intuitive Redis-like API. This API is available as a native RESP (the Redis protocol) server and a gRPC service. Using the RESP server allows you to continue using the Redis client libraries you have experience with, while the gRPC system gives you high-performance connection-pool-free client SDKs in many languages with native protocol buffer support. If you&apos;re running Global Tables, you can pass in the region-table combinations you&apos;re running, and REDIMO will automatically choose the nearest one. </p>
+<p class="my-4">On both the RESP server and gRPC service, the following Redis-inspired operations are available:</p>
+<p class="my-4"><code>GET(key)</code> retrieves the value stored at the given key.</p>
+<p class="my-4"><code>SET(key, value)</code> sets the value at the given key.</p>
+<p class="my-4"><code>DEL(key)</code> deletes value at key.</p>
+<p class="my-4"><code>GETSET(key, value)</code> sets the given value at the key and returns the old value.</p>
+<p class="my-4"><code>SETX(key, value)</code> sets the value on key only if the key already exists.</p>
+<p class="my-4"><code>SETNX(key, value)</code> sets the value on key only if the key does <strong>not</strong> already exist.</p>
+<p class="my-4"><code>INCRBY(key, delta)</code> increments the number value at the key with the given delta.</p>
+<p class="my-4"><code>DECRBY(key, delta)</code> decrements the number value at the key with the given delta.</p>
+<p class="my-4"><code>EXISTS(key)</code> checks if the given key exists.</p>
+<p class="my-4"><em>Hashes</em> or <em>hash-maps</em> are supported, and can be used by adding a sub-key along with the key: commonly called a <em>field</em>. The following operations work the same as their counterparts above:</p>
+<p class="my-4"><code>HGET(key, field)</code> </p>
+<p class="my-4"><code>HSET(key, field, value)</code> </p>
+<p class="my-4"><code>HDEL(key, field)</code> </p>
+<p class="my-4"><code>HGETSET(key, field, value)</code> </p>
+<p class="my-4"><code>HSETX(key, field, value)</code> </p>
+<p class="my-4"><code>HSETNX(key, field, value)</code> </p>
+<p class="my-4"><code>HINCRBY(key, field, delta)</code> </p>
+<p class="my-4"><code>HDECRBY(key, field, delta)</code> </p>
+<p class="my-4"><code>HEXISTS(key, field)</code></p>
+<p class="my-4">Key-Value operations are hash operations with constant field names under the hood: <code>SET(key, value)</code> is the same as <code>HSET(key, &apos;/&apos;, value)</code> and <code>GET(key)</code> is the same as  <code>HGET(key, &apos;/&apos;)</code>. </p>
+<p class="my-4">Hashes have a few other useful operations:</p>
+<p class="my-4"><code>HGETALL(key)</code> returns all fields and values at the given key. This is useful as a cost effective way to get a large number of small items, because the underlying operation is charged based on data size instead of number of items.</p>
+<p class="my-4"><code>HKEYS(key)</code> returns the list of all fields in the hash at the given key. </p>
+<p class="my-4"><code>HLEN(key)</code> counts the number of fields set on the hash at the given key.</p>
+<p class="my-4">Using the sub-keys or fields inside a hash-map without assigning any values gives us a <em>set</em> data structure&#x2014;we can do operations like:</p>
+<p class="my-4"><code>SADD(key, member)</code> adds the member to the set at key. This is the same as <code>HSET</code> with no value.</p>
+<p class="my-4"><code>SREM(key, member)</code> removes the member from the set at key, same as <code>HDEL</code>.</p>
+<p class="my-4"><code>SISMEMBER(key, member)</code> checks if the member is present in the set at key, same as <code>HEXISTS</code>.</p>
+<p class="my-4"><code>SMEMBERS(key)</code> returns all the members of the set at the given key, same as <code>HKEYS</code>.</p>
+<p class="my-4"><code>SCARD(key)</code> counts the number of members in the set, and is the same as <code>HLEN(key)</code>.</p>
+<p class="my-4">DynamoDB sorts all the fields when storing them, which gives us the ability to do <em>sorted set</em> operations:</p>
+<p class="my-4"><code>ZRANGEBYLEX(key, start, end, limit, offset)</code> returns the items with member/field name between the <em>start</em> and <em>end</em> strings. This is useful for doing &#x201C;starts-with&#x201D; operations and from-to queries. <em>Limit</em> restricts the maximum number of items returned, while the <em>offset</em> number of items are skipped returning results.</p>
+<p class="my-4"><code>ZREVRANGEBYLEX(key, start, end, limit, offset)</code> works same as <code>ZRANGEBYLEX</code>, but in reverse sort order.</p>
+<p class="my-4"><code>ZLEXCOUNT(key, start, end)</code> counts the members/fields between the <em>start</em> and <em>end</em> strings.</p>
+</div>
+
+
+</body></html>

@@ -1,0 +1,7 @@
+name = "redimo"
+type = "webpack"
+account_id = "b32c2f76098282accb2a0061a453a628"
+workers_dev = true
+
+[site]
+bucket = "./public"
